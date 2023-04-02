@@ -1,0 +1,102 @@
+﻿API현황
+
+
+인터파크 - 더이상 제공X
+네이버-https://developers.naver.com/docs/serviceapi/search/book/book.md
+
+
+카카오(다음)-https://developers.kakao.com/docs/latest/ko/daum-search/dev-guide#search-book-info
+
+
+알라딘-https://docs.google.com/document/d/1mX-WxuoGs8Hy-QalhHcvuV17n50uGI2Sg_GHofgiePE/edit#heading=h.npqn2iowpse8
+
+
+-알라딘 API는 항목별 세세한 정보가 있지만, 네이버나 카카오는 큰 기준으로만 구분해 설명하고있음. 
+
+
+
+
+
+
+향후 활용 계획
+
+
+-책정보, 표지 이미지 등은 카카오API
+-판매량, 편집자 추천 리스트 등의 리스트 자료 등은 알라딘
+-가격 등은 네이버
+
+
+네이버와 카카오의 경우, API의 정보 제공 여부에 따라 변동 가능
+
+
+=> 대부분의 정보는 알라딘API 가져오고, 가격 부분에서 네이버, 알라딘, 카카오 다 활용해도 될 듯
+
+
+알라딘 API
+
+
+-도서정보
+=PublishTime : 출간일
+Title : 제목
+SalesPoint : 판매량
+cover 커버(표지)
+ISBN
+publisher 출판사(제작사/출시사)
+categoryIdList 전체 분야 (추가 요청시 가능)
+authors 상품의 저자/아티스트 정보 목록 (추가 요청시 가능)
+Toc 상품의 목차 (추가 요청시 가능)
+Story 줄거리 (추가 요청시 가능)
+pricesales 판매가
+pricestandard 정가
+
+
+fullDescription 책소개
+fullDescription2 출판사 제공 책소개
+
+
+categoryIdList < categoryInfo <
+categoryId
+전체 분야 정보 - 카테고리 ID
+
+
+categoryIdList < categoryInfo <
+categoryName
+전체 분야 정보 - 카테고리 명
+
+
+toc 목차
+bestSellerRank 상품의 주간베스트셀러 순위 정보
+
+
+
+
+-리스트
+=ItemNewAll : 신간 전체 리스트
+ItemNewSpecial : 주목할 만한 신간 리스트
+Bestseller : 베스트셀러 ( 베스트셀러 조회할 주간 - month로 계획)
+bestDuration (베스트셀러인 경우만 노출) 베스트셀러 순위 관련 추가 정보
+bestRank (베스트셀러인 경우만 노출) 베스트셀러 순위 정보
+
+
+
+
+
+
+활용여부
+
+
+-프로젝트 초반에 말했던 3개의 API를 하나로 묶어서 진행하는 방식X
+
+
+->
+
+
+대신, 각 기능별 필요한 API를 선택적으로 사용하는 방식으로 변경 제안
+
+
+
+
+0401
+-신간도서 / 회원추천도서 리스트
+→ 우선적으로는 신간도서는 필수적으로 출력하는 것을 목표, 시간이 남는다면 회원추천도서도 하는 걸로
+⇒ 데이터 업데이트 주기는 우선 한 달에 한 번으로 기준
