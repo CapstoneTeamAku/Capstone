@@ -1,0 +1,81 @@
+게시판 기능과 같이 찾은 코드임
+이것도 본인이 할 코드에 맞게 수정바람
+
+# 게시판 글 작성
+
+const newPosting = () => {
+    axios.post('http://localhost:3001/questions',{
+      params: {
+        post_title: postId,
+        post_content: desc,
+        post_nickname : sessionStorage.getItem('user_nickname'),
+        post_user_id : sessionStorage.getItem('user_id'),
+      }
+    })
+      .then(res => {
+        console.log(res.data)
+        alert("글 작성이 완료되었습니다.")
+        document.location.href = '/'
+      })
+      .catch(function(error){
+       console.log(error);
+    })
+}
+
+//render 부분에 작성
+<Button onClick = {newPosting}/>
+
+// 다음과 같이 자유롭게 파라미터에 대한 설명임 - 문서화 작업할때 쓰이면 될 듯함
+params: {
+    post_title: 글 제목,
+    post_content: 글 내용,
+    post_nickname : 닉네임,
+    post_user_id : 작성한 사용자 아이디,
+}
+
+# 게시판 글 수정
+
+const onClickUpdate = () => {
+    if (inputTitle != "" && desc != "") {
+        axios.post('http://localhost:3001/onUpdate', {
+            params: {
+                post_id: 게시글번호,
+                post_title: 글 제목,
+                post_content: 글 내용,
+                post_nickname: sessionStorage.getItem("user_nickname")
+            }
+        })
+            .then(res => {
+                console.log(res.data)
+                alert("수정이 완료되었습니다.")
+                document.location.href = '/'
+            })
+            .catch()
+    }
+    else {
+        alert("글 혹은 내용을 입력해야만 합니다.")
+    }
+}
+
+# 게시판 삭제 버튼 클릭
+const onClickDelete = () => {
+    if (sessionStorage.getItem('user_id') == postData.post_user_id) {
+        axios.post('http://localhost:3001/onDelete', null, {
+            params: {
+                'postnickname': 글쓴이 닉네임,
+                'post_id': 게시글id
+            }
+        })
+            .then(res => {
+                alert('게시글이 삭제 되었습니다.')
+                //삭제되면 새로고침
+                document.location.href = '/'
+                console.log(res.data);
+            })
+
+            .catch()
+    }
+    else {
+        alert('작성자만 삭제 및 수정이 가능합니다.')
+    }
+}
