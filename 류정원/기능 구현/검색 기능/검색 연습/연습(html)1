@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>책 검색 사이트</title>
+    <style>
+        .book {
+            border: 1px solid black;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .author {
+            margin-bottom: 5px;
+        }
+        .publisher {
+            margin-bottom: 5px;
+        }
+        .thumbnail {
+            max-width: 200px;
+            max-height: 200px;
+            margin-bottom: 10px;
+        }
+        .summary {
+            line-height: 1.5;
+        }
+        .pagination {
+            margin-top: 20px;
+        }
+        .pagination li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .pagination li a {
+            display: block;
+            padding: 5px 10px;
+            border: 1px solid black;
+            text-decoration: none;
+        }
+        .pagination li.active a {
+            font-weight: bold;
+            color: white;
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+    <input type="text" id="query">
+    <button id="search">검색</button>
+
+    <div id="book-list"></div>
+
+    <ul class="pagination"></ul>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+        <script>
+            $(document).ready(function () {
+                var pageNum = 1;
+                var totalPages = 1;
+            
+                $("#search").click(function () {
+                    $("#book-list").html("");
+                    $(".pagination").html("");
+            
+                    $.ajax({
+                        method: "GET",
+                        url: "https://dapi.kakao.com/v3/search/book?target=title",
+                        data: { query: $("#query").val(), page: pageNum},
+                        headers: {Authorization: "KakaoAK 인증키"}
+                    })
+                    .done(function (msg) {
+                        console.log(msg);
+                        totalPages = Math.ceil(msg.meta.pageable_count / 10);
+                        for (var i = 0; i < 5; i++){
+                            var authorDiv = $("<div class='author'></div>").text("저자: " + msg.documents[i].authors);
+                            var publisherDiv = $("<div class='publisher'></div>").text("출판사: " + msg.documents[i].publisher);
+                            var summaryDiv = $("<div class='summary'></div>").text(msg.documents[i].contents);
+                            var thumbnailDiv = $("<img class='thumbnail'>").attr("src", msg.documents[i].thumbnail);
+            
+                            var titleDiv = $("<div class='title'></div>").text(msg.documents[i].title);
+                            var bookDiv = $("<div class='book'></div>");
+                            bookDiv.append(thumbnailDiv);
+                            bookDiv.append(titleDiv);
+                            bookDiv.append(authorDiv);
+                            bookDiv.append(publisherDiv);
+                            bookDiv.append(summaryDiv);
+            
+                            $("#book-list").append(bookDiv);
+                        }
+                        for (var j = 1; j <= totalPages; j++){
+                            var pageLink = $("<a></a>").attr("href", "#").text(j);
+                            var pageLi = $("<li></li>").append(pageLink);
+                            if (j == pageNum){
+                                pageLi.addClass("active");
+                            }
+                            $(".pagination").append(pageLi);
+                        }
+                    });
+                });
+            
+                $(document).on("click", ".pagination li", function(){
+                    var clickedPage = $(this).text();
+                    if (clickedPage != pageNum){
+                        pageNum = clickedPage;
+                        $("#search").click();
+                    }
+                });
+            });
+</script>
+</body>
+</html>
